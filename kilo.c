@@ -17,6 +17,8 @@ enum editorKey {
     ARROW_RIGHT,
     ARROW_UP,
     ARROW_DOWN,
+    HOME_KEY,
+    END_KEY,
     PAGE_UP,
     PAGE_DOWN
 };
@@ -237,7 +239,7 @@ void editorProcessKeypress() {
             editorMoveCursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
         }
         break;
-        
+
         case ARROW_UP:
         case ARROW_DOWN:
         case ARROW_LEFT:
