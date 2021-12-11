@@ -194,7 +194,7 @@ int editorRowRxToCx(erow *row, int rx) {
     for (cx = 0; cx < row->size; cx++) {
         if (row->chars[cx] == '\t')
             cur_rx += (KILO_TAB_STOP - 1) - (cur_rx % KILO_TAB_STOP);
-            cur_rx++;
+        cur_rx++;
         if (cur_rx > rx) return cx;
     }
     return cx;
@@ -410,9 +410,11 @@ void editorSave() {
 }
 
 /*** find ***/
-void editorFind() {
-    char *query = editorPrompt("Search: %s (ESC to cancel)");
-    if (query == NULL) return;
+void editorFindCallback(char *query, int key) {
+    if (key == '\r' || key == '\x1b') {
+        return;
+    }
+
     int i;
     for (i = 0; i < E.numrows; i++) {
         erow *row = &E.row[i];
@@ -424,7 +426,23 @@ void editorFind() {
             break;
         }
     }
-    free(query);
+}
+void editorFind() {
+    int saved_cx = E.cx;
+    int saved_cy = E.cy;
+    int saved_coloff = E.coloff;
+    int saved_rowoff = E.rowoff;
+
+    char *query = editorPrompt("Search: %s (ESC to cancel)");
+
+    if (query) {
+        free(query);
+    } else {
+        E.cx = saved_cx;
+        E.cy = saved_cy;
+        E.coloff = saved_coloff;
+        E.rowoff = saved_rowoff;
+  }
 }
 
 /*** append buffer ***/
